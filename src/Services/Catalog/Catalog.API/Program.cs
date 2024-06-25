@@ -1,6 +1,7 @@
 using BuildingBlocks.Exceptions.Handler;
 using BuildingBlocks.PipeLineBehaviors;
 using Carter;
+using Catalog.API.Data;
 using FluentValidation;
 using Marten;
 
@@ -20,7 +21,13 @@ builder.Services.AddCarter();
 builder.Services.AddMarten(opt =>
 {
     opt.Connection(builder.Configuration.GetConnectionString("CatalogDB")!);
+   
 }).UseLightweightSessions();
+
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.InitializeMartenWith<CatalogInitialData>();
+}
 
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 var app = builder.Build();
