@@ -1,4 +1,6 @@
 ﻿using Carter;
+using Catalog.API.DTOs;
+using Mapster;
 using MediatR;
 
 namespace Catalog.API.Products.GetProduct
@@ -7,9 +9,10 @@ namespace Catalog.API.Products.GetProduct
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapGet("/products", async (ISender sender) =>
+            app.MapGet("/products", async ([AsParameters] GetAllProductsRequest request,ISender sender) =>
             {
-                var result = await sender.Send(new GetProductsQuery());
+                var query = request.Adapt<GetProductsQuery>();
+                var result = await sender.Send(query);
                 return Results.Ok(result);
             }).WithName("GetProducts")
             .Produces(200)

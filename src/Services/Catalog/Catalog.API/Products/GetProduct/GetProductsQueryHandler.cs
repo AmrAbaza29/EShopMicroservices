@@ -2,6 +2,7 @@
 using Catalog.API.DTOs;
 using Catalog.API.Models;
 using Marten;
+using Marten.Pagination;
 
 namespace Catalog.API.Products.GetProduct
 {
@@ -10,7 +11,7 @@ namespace Catalog.API.Products.GetProduct
     {
         public async Task<ProductResultDto> Handle(GetProductsQuery request, CancellationToken cancellationToken)
         {
-            var products = await session.Query<Product>().ToListAsync(cancellationToken);
+            var products = await session.Query<Product>().ToPagedListAsync(request.PageNumber, request.PageSize, cancellationToken);    
             return new ProductResultDto(products);
         }
     }
